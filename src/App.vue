@@ -1,12 +1,13 @@
 <template>
   <nav>
     <div class="navigation__logo">Twotter</div>
-    <div class="navigation user">{{ user.username }}</div>
+    <div class="navigation user">{{ state.user.username }}</div>
   </nav>
   <UserProfile />
 </template>
 
 <script>
+import { reactive } from 'vue'
 import UserProfile from './components/UserProfile'
 
 export default {
@@ -14,11 +15,15 @@ export default {
   components: {
     UserProfile
   },
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       user: {
         username: '_damianwojcik'
       }
+    })
+
+    return {
+      state
     }
   }
 }
