@@ -3,23 +3,33 @@
     <router-link to="/"
       ><div class="navigation__logo">Twotter</div></router-link
     >
-    <div class="navigation user" v-if="user">{{ user.username }}</div>
+    <div class="navigation user" v-if="store.state.User.user">
+      {{ store.state.User.user.email }}
+    </div>
+    <button v-if="store.state.User.user" @click="handleSignOut">
+      Sign Out
+    </button>
   </nav>
   <router-view />
 </template>
 
 <script>
-import { computed } from 'vue'
+import { auth } from '../firebase'
 import { useStore } from 'vuex'
 
 export default {
   name: 'App',
   setup() {
     const store = useStore()
-    const user = computed(() => store.state.User.user)
+
+    function handleSignOut(e) {
+      e.preventDefault()
+      auth.signOut()
+    }
 
     return {
-      user
+      store,
+      handleSignOut
     }
   }
 }

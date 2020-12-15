@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" v-if="store.state.User.user">
     <h1>Home</h1>
     <div class="users-list">
       <router-link
@@ -11,15 +11,24 @@
       </router-link>
     </div>
   </div>
+  <Form v-if="!store.state.User.user" />
 </template>
 
 <script>
+import Form from '../components/Form'
 import { users } from '../assets/users'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Home',
+  components: {
+    Form
+  },
   setup() {
+    const store = useStore()
+
     return {
+      store,
       users
     }
   }

@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import store from '../store'
-import { users } from '../assets/users'
+import { auth } from '../../firebase'
 import Home from '../views/Home.vue'
 import UserProfile from '../views/UserProfile.vue'
 import Admin from '../views/Admin.vue'
@@ -32,11 +32,16 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  const user = store.state.User.user
 
-  if(!user) {
-    await store.dispatch('User/setUser', users[0])
-  }
+  auth.onAuthStateChanged(async user => {
+    if (user) {
+      localStorage.setItem('user', user.uid)
+      await store.dispatch('User/setUser', user)
+    } else {
+      localStorage.removeItem('user')
+      await store.dispatch('User/setUser', null)
+    }
+  })
 
   const isAdmin = false;
   const requiresAdmin = to.matched.some(record => record.meta.requiresAdmin)
